@@ -38,6 +38,18 @@ exports.screenDonor = async (req,res) => {
   const response = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:screenDonor', args);
   (response.error) ? res.status(500).send(response.error) : res.status(200).send(getMessage(false, 'Screening successful.'));
 }
+
+exports.collectBlood = async (req,res) => {
+  const userRole = req.headers.role;
+  await validateRole([ROLE_DOCTOR], userRole, res);
+  let args=req.body;
+  console.log(args);
+  args= [JSON.stringify(args)];
+  const networkObj = await network.connectToNetwork(req.headers.username);
+  // Invoke the smart contract function
+  const response = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:bloodCollection', args);
+  (response.error) ? res.status(500).send(response.error) : res.status(200).send(getMessage(false, 'Blood Collection successful.'));
+}
 /**
  * @param  {Request} req role in the header and hospitalId, doctorId in the url
  * @param  {Response} res A 200 response if doctor is present else a 500 response with a error json

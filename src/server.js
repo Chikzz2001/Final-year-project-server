@@ -255,6 +255,7 @@ app.post('/technicians/register', authenticateJWT, adminRoutes.createTechnician)
 app.patch('/donors/:donorId/details/medical', authenticateJWT, doctorRoutes.updateDonorMedicalDetails);
 app.get('/doctors/:hospitalId([0-9]+)/:doctorId(HOSP[0-9]+\-DOC[0-9]+)', authenticateJWT, doctorRoutes.getDoctorById);
 app.post('/doctor/screendonor/:doctorId(HOSP[0-9]+\-DOC[0-9]+)', authenticateJWT, doctorRoutes.screenDonor);
+app.post('/doctor/blood-collect', authenticateJWT, doctorRoutes.collectBlood);
 
 // //////////////////////////////// Donor Routes //////////////////////////////////////
 app.get('/donors/:donorId', authenticateJWT, donorRoutes.getDonorById);
