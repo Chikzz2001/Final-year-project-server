@@ -90,7 +90,21 @@ function generateAccessToken(username, role) {
     hospitalId = parseInt(hospitalId);
     let user;
 
-    if (role === ROLE_DOCTOR || role === ROLE_ADMIN) {
+    if (username.includes("DOC") && role === ROLE_DOCTOR) {
+      const redisClient = await createRedisClient(hospitalId);
+      const value = await redisClient.get(username);
+      user = value === password;
+      redisClient.quit();
+    }
+    
+    if (username.includes("admin") && role === ROLE_ADMIN) {
+      const redisClient = await createRedisClient(hospitalId);
+      const value = await redisClient.get(username);
+      user = value === password;
+      redisClient.quit();
+    }
+    
+    if (username.includes("TECH") && role === ROLE_TECHNICIAN) {
       const redisClient = await createRedisClient(hospitalId);
       const value = await redisClient.get(username);
       user = value === password;
