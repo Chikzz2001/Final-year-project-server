@@ -33,10 +33,11 @@ app.listen(3001, () => console.log('Backend server running on 3001'));
 // Bring key classes into scope
 const donorRoutes = require('./donor-routes');
 const doctorRoutes = require('./doctor-routes');
+const technicianRoutes = require('./technician-routes');
 const adminRoutes = require('./admin-routes');
 //const databaseRoutes = require('./databaseConnect');
 const geoRoutes = require('./geoRoutes');
-const {ROLE_DOCTOR, ROLE_ADMIN, ROLE_DONOR, CHANGE_TMP_PASSWORD} = require('../utils');
+const {ROLE_DOCTOR, ROLE_TECHNICIAN, ROLE_ADMIN, ROLE_DONOR, CHANGE_TMP_PASSWORD} = require('../utils');
 const {createRedisClient, capitalize, getMessage} = require('../utils');
 const network = require('../../donor-asset-transfer/application-javascript/app.js');
 
@@ -270,6 +271,10 @@ app.patch('/donors/:donorId/details/medical', authenticateJWT, doctorRoutes.upda
 app.get('/doctors/:hospitalId([0-9]+)/:doctorId(HOSP[0-9]+\-DOC[0-9]+)', authenticateJWT, doctorRoutes.getDoctorById);
 app.post('/doctor/screendonor/:doctorId(HOSP[0-9]+\-DOC[0-9]+)', authenticateJWT, doctorRoutes.screenDonor);
 app.post('/doctor/blood-collect', authenticateJWT, doctorRoutes.collectBlood);
+
+/////////////////////////////////// Technician Routes //////////////////////////////////
+app.get('/technicians/:hospitalId([0-9]+)/:technicianId(HOSP[0-9]+\-TECH[0-9]+)', authenticateJWT, technicianRoutes.getTechnicianById);
+app.post('/technician/bloodtest', authenticateJWT, technicianRoutes.bloodTestOfBloodBags);
 
 // //////////////////////////////// Donor Routes //////////////////////////////////////
 app.get('/donors/:donorId', authenticateJWT, donorRoutes.getDonorById);

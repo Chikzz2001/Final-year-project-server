@@ -13,7 +13,7 @@ const redis = require('redis');
  */
 async function initLedger() {
   try {
-    const jsonString = fs.readFileSync('../donor-asset-transfer/chaincode/lib/initLedger.json');
+    const jsonString = fs.readFileSync('../donor-asset-transfer/chaincode/lib/initLedgerDonor.json');
     const donors = JSON.parse(jsonString);
     let i = 0;
     for (i = 0; i < donors.length; i++) {
@@ -66,6 +66,24 @@ async function enrollAndRegisterDoctors() {
   }
 };
 
+async function enrollAndRegisterTechnicians() {
+  try {
+    const jsonString = fs.readFileSync('./initTechnicians.json');
+    const technicians = JSON.parse(jsonString);
+    for (let i = 0; i < technicians.length; i++) {
+      const attr = {fullName: technicians[i].fullName, address: technicians[i].address, phoneNumber: technicians[i].phoneNumber, emergPhoneNumber: technicians[i].emergPhoneNumber, role: 'technician', registration: technicians[i].registration};
+      // Create a redis client and add the doctor to redis
+      technicians[i].hospitalId = parseInt(technicians[i].hospitalId);
+      const redisClient = createRedisClient(technicians[i].hospitalId);
+      (await redisClient).SET('HOSP' + technicians[i].hospitalId + '-' + 'TECH' + technicians[i].registration, 'password');
+      await enrollRegisterUser(technicians[i].hospitalId, 'HOSP' + technicians[i].hospitalId + '-' + 'TECH' + technicians[i].registration, JSON.stringify(attr));
+      (await redisClient).QUIT();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 /**
  * @description Function to initialise the backend server, enrolls and regsiter the admins and initLedger donors.
  * @description Need not run this manually, included as a prestart in package.json
@@ -77,6 +95,7 @@ async function main() {
   await initLedger();
   await initRedis();
   await enrollAndRegisterDoctors();
+  await enrollAndRegisterTechnicians();
  */
 }
 
