@@ -275,6 +275,8 @@ app.post('/doctor/blood-collect', authenticateJWT, doctorRoutes.collectBlood);
 /////////////////////////////////// Technician Routes //////////////////////////////////
 app.get('/technicians/:hospitalId([0-9]+)/:technicianId(HOSP[0-9]+\-TECH[0-9]+)', authenticateJWT, technicianRoutes.getTechnicianById);
 app.post('/technician/bloodtest', authenticateJWT, technicianRoutes.bloodTestOfBloodBags);
+//app.get('/technician/readbloodbag/:bloodBagUnitNo/:bloodBagSegmentNo/:bloodBagType',authenticateJWT, technicianRoutes.readBloodBag);
+app.post('/technician/readbloodbag',authenticateJWT, technicianRoutes.readBloodBag);
 
 // //////////////////////////////// Donor Routes //////////////////////////////////////
 app.get('/donors/:donorId', authenticateJWT, donorRoutes.getDonorById);

@@ -18,6 +18,17 @@ const network = require('../../donor-asset-transfer/application-javascript/app.j
  * @param  {Response} res A 200 response if technician is present else a 500 response with a error json
  * @description This method retrives an existing technician
  */
+exports.readBloodBag = async (req,res) => {
+  const userRole = req.headers.role;
+  await validateRole([ROLE_TECHNICIAN], userRole, res);
+  let args=req.body;
+  console.log(args);
+  args=[JSON.stringify(args)];
+  const networkObj = await network.connectToNetwork(req.headers.username);
+  const response = await network.invoke(networkObj, false, capitalize(userRole) + 'Contract:readBag', args);
+  console.log(response);
+  (response.error) ? res.status(500).send(response.error) : res.status(200).send(response);
+}
 
 exports.bloodTestOfBloodBags = async (req,res) => {
   const userRole = req.headers.role;
