@@ -189,3 +189,31 @@ exports.createTechnician = async (req, res) => {
   }
   res.status(201).send(getMessage(false, response, username, password));
 };
+
+exports.deleteUser = async (req, res) => {
+  try {
+    // User role from the request header is validated
+    const userRole = req.headers.role;
+    await validateRole([ROLE_ADMIN], userRole, res);
+    
+    // Extract adminId and doctorId from the request parameters
+    const { adminId, Id } = req.params;
+    console.log(adminId);
+    console.log(Id);
+    // Check if adminId and doctorId are present
+    if (!adminId || !Id) {
+      return res.status(400).json({ error: 'AdminId and Id are required' });
+    }
+
+    // Perform deletion logic here, such as deleting the doctor from the Redis database
+    const hospitalId=adminId.substring(4,5);
+    const redisClient = createRedisClient(parseInt(hospitalId)); // Assuming adminId is used to select the Redis database
+    (await redisClient).DEL(Id); // Delete the doctor using the doctorId
+
+    // Send success response
+    res.status(200).json({ message: 'Doctor deleted successfully' });
+  } catch (error) {
+    console.error('Error deleting doctor:', error);
+    res.status(500).json({ error: 'An unexpected error occurred while deleting the doctor' });
+  }
+};

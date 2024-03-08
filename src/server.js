@@ -265,6 +265,7 @@ app.get('/donors/_all', authenticateJWT, adminRoutes.getAllDonors);
 app.post('/donors/register', authenticateJWT, adminRoutes.createDonor);
 app.get('/technicians/:hospitalId([0-9]+)/_all', authenticateJWT, adminRoutes.getTechniciansByHospitalId);
 app.post('/technicians/register', authenticateJWT, adminRoutes.createTechnician);
+app.delete('/:adminId/delete/:Id', authenticateJWT, adminRoutes.deleteUser);
 
 // //////////////////////////////// Doctor Routes //////////////////////////////////////
 app.patch('/donors/:donorId/details/medical', authenticateJWT, doctorRoutes.updateDonorMedicalDetails);
